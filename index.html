@@ -22,7 +22,17 @@
 
             <div class="product-info">
                 <h1>{{ product}}</h1> 
+                <p>{{description}}</p>
+                <p v-show="onSale">On Sale 10% !</p>
+                <a href :link="link">More product like this</a>
+                <p v-if="inventory > 10">In stock</p>
+                <p v-else-if="inventory <=10 && inventory>0">Almost sold out</p>
+                <p v-else>Out of Stock</p>
+                <ul >
+                    <li v-for="detail in details">{{ detail }}</li>
+                </ul>
             </div>
+
 
         </div>
     </div>
