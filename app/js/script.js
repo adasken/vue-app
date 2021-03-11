@@ -35,7 +35,7 @@ Vue.component('product', {
       <div class="product-info">
         <h1>{{title}}</h1> 
         <p>{{description}}</p>
-        <p>Shipping: {{ shippingCost }}</p>
+        <info-tabs :shipping="shipping" :details="details"></info-tabs>
         <p v-show="variants[selectedVariant].onSale.sale">On Sale {{percentDiscount}}% !</p>
         <a href :link="link">More product like this</a>
         <p v-if="inventory > 10">In stock</p>
@@ -126,7 +126,7 @@ Vue.component('product', {
     percentDiscount(){
       return this.variants[this.selectedVariant].onSale.discount;
     },
-    shippingCost(){
+    shipping(){
       if(this.premium){
         return "free";
       }
@@ -284,6 +284,50 @@ Vue.component('product-tabs', {
     return{
       tabs: ['Reviews', 'Write A Review'],
       selectedTab: 'Reviews'
+    }
+  }
+
+})
+
+Vue.component('info-tabs',{
+
+  props: {
+    shipping:{
+      required: true
+    },
+    details:{
+      type: Array,
+      required: true
+    }
+  },
+  template:`
+    <div>
+
+        <span class="tab"
+              :class = "{ activeTab: selectedTab === tab }"
+              v-for="(tab, index) in tabs" 
+              :key="index"
+              @click="selectedTab = tab"
+              > {{ tab }} 
+        </span>
+
+        <div v-show="selectedTab === 'Shipping'">
+        <p>{{ shipping }}</p>
+      </div>
+
+      <div v-show="selectedTab === 'Details'">
+        <ul>
+          <li v-for="detail in details">{{ detail }}</li>
+        </ul>
+      </div>
+
+    </div>
+  `,
+
+  data(){
+    return{
+      tabs: ['Shipping', 'Details'],
+      selectedTab: 'Shipping'
     }
   }
 
