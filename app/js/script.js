@@ -1,5 +1,7 @@
 console.log("This is a website")
 
+var eventBus = new Vue();
+
 Vue.component('product-details',{
 
   props:{
@@ -109,9 +111,6 @@ Vue.component('product', {
       this.selectedVariant = index;
       console.log(index)
     },
-    addReview: function(productReview){
-      this.reviews.push(productReview);
-    }
   },
   computed:{
 
@@ -136,6 +135,12 @@ Vue.component('product', {
       }
     }
 
+  },
+
+  mounted(){
+    eventBus.$on('submit-form', productReview => {
+      this.reviews.push(productReview);
+    })
   }
 
 })
@@ -214,7 +219,7 @@ Vue.component('product-review',{
           recommend: this.recommend
         };
   
-        this.$emit('submit-form', productReview);
+        eventBus.$emit('submit-form', productReview);
   
         this.name = null;
         this.review = null;
@@ -252,7 +257,7 @@ Vue.component('product-tabs', {
               > {{ tab }} 
         </span>
 
-        <div>
+        <div v-show="selectedTab === 'Reviews'">
           <h2>Reviews</h2>
           <p v-if="reviews.length == 0">There are no reviews yet. </p>
           <ul>
@@ -265,7 +270,10 @@ Vue.component('product-tabs', {
         </div>
 
 
-        <product-review @submit-form="addReview"></product-review>
+        <product-review
+          v-show="selectedTab === 'Write A Review'" >
+          
+        </product-review>
 
     </div>
 
